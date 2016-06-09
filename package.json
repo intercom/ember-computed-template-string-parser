@@ -1,0 +1,24 @@
+{
+  "name": "ember-computed-template-string-parser",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run compile && mocha tests",
+    "compile": "babel lib/parser.es6 --out-file lib/parser.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/intercom/ember-computed-template-string-parser.git"
+  },
+  "author": "Intercom Engineering",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/intercom/ember-computed-template-string-parser/issues"
+  },
+  "homepage": "https://github.com/intercom/ember-computed-template-string-parser#readme",
+  "devDependencies": {
+    "mocha": "^2.5.3",
+    "babel": "^5.2.10"
+  }
+}
