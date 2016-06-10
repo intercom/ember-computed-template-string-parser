@@ -2,10 +2,11 @@
   "name": "ember-computed-template-string-parser",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "lib/parser.js",
   "scripts": {
-    "test": "npm run compile && mocha tests",
-    "compile": "babel lib/parser.es6 --out-file lib/parser.js"
+    "build": "babel lib/parser.es6 --out-file lib/parser.js",
+    "test": "npm run build && mocha tests",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
