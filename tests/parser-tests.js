@@ -3,30 +3,61 @@ var Parser = require('../lib/parser');
 
 describe("template-string-parser", function() {
 
-  it("temp tests", function() {
-    var parser = new Parser("");
-    assert.equal(parser.sections.length, 0);
-    parser = new Parser("hello");
-    assert.equal(parser.sections.length, 1);
-    parser = new Parser("hi ${name}");
-    assert.equal(parser.sections.length, 2);
-    assert.equal(parser.sections[0].type(), 'LiteralSection');
-    assert.equal(parser.sections[1].type(), 'PropertySection');
-    parser = new Parser("hi ${name}!");
-    assert.equal(parser.sections.length, 3);
-    parser = new Parser("hi ${name}, you are ${age}!");
-    assert.equal(parser.sections.length, 5);
-    parser = new Parser("hi ${person.name}");
-    assert.equal(parser.sections.length, 2);
-    parser = new Parser("${name}");
-    assert.equal(parser.sections.length, 1);
-    parser = new Parser("${name");
-    assert.equal(parser.sections.length, 1);
-    assert.equal(parser.sections[0].type(), 'LiteralSection');
-    parser = new Parser("hi ${name ${name}");
-    assert.equal(parser.sections.length, 2);
-    assert.equal(parser.sections[1].type(), 'PropertySection');
-    parser = new Parser("hi }!");
-    assert.equal(parser.sections.length, 1);
-  });
+  assertInvalidTemplates([
+    "hello",
+    "${name"
+  ]);
+
+  assertValidTemplate(
+    "${name}",
+    `Ember.computed("name", function() { return this.get("name"); })`
+  );
+
+  assertValidTemplate(
+    "hello ${name}",
+    `Ember.computed("name", function() { return "hello " + this.get("name"); })`
+  );
+
+  assertValidTemplate(
+    "hello ${name}!",
+    `Ember.computed("name", function() { return "hello " + this.get("name") + "!"; })`
+  );
+
+  assertValidTemplate( //TODO: perhaps use brace expansion here?
+    "hello ${person.name} you are ${person.age} years old",
+    `Ember.computed("person.name", "person.age", function() { return "hello " + this.get("person.name") + " you are " + this.get("person.age") + " years old"; })`
+  );
+
+  assertValidTemplate(
+    "here is a single quote ${name} : '",
+    `Ember.computed("name", function() { return "here is a single quote " + this.get("name") + " : '"; })`
+  );
+
+  assertValidTemplate(
+    'here is a double quote ${name} : "',
+    `Ember.computed("name", function() { return "here is a double quote " + this.get("name") + " : \""; })`
+  );
+
 });
+
+
+function assertValidTemplate(template, expectedFunctionString) {
+  it(`correct parses ${template}`, function() {
+    var parser = new Parser(template);
+    assert.equal(parser.toComputedPropertyString(), expectedFunctionString);
+  });
+}
+
+function assertInvalidTemplate(template) {
+  it(`raises an exception when parsing ${template}`, function() {
+    assert.throws(function() {
+      new Parser(template);
+    }, "Templates must contain a dynamic section");
+  });
+}
+
+function assertInvalidTemplates(templates) {
+  templates.forEach(function(template) {
+    assertInvalidTemplate(template);
+  })
+}

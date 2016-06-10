@@ -8,6 +8,9 @@ class Parser {
     this._isLiteralMode = true;
     this._parse();
   }
+  toComputedPropertyString() {
+    return `Ember.computed(${this._getKeyArguments()}function() { ${this._getReturnStatement()} })`;
+  }
 
   _parse() {
     for(this._cursor =0; this._cursor < this.template.length; this._cursor++ ) {
@@ -24,10 +27,16 @@ class Parser {
         }
       }
     }
+
     let trailingText = this._getRangeText();
     if(trailingText.length > 0) {
       this.sections.push(new LiteralSection(trailingText));
     }
+
+    if(this._propertySections().length === 0) {
+      throw "Templates must contain a dynamic sections";
+    }
+
   }
 
   _isLiteralModeAndStartOfProperty() {
@@ -53,6 +62,38 @@ class Parser {
     let propertyName = this._getRangeText();
     this.sections.push(new PropertySection(propertyName));
   }
+
+  _propertySections() {
+    return this.sections.filter(section => {
+      return section instanceof PropertySection;
+    });
+  }
+
+  _literalSections() {
+    return this.sections.filter(section => {
+      return section instanceof LiteralSection;
+    });
+  }
+
+  _getKeyArguments() {
+    let suffix = "";
+    let propertySections = this._propertySections();
+    if(propertySections.length > 0) {
+      suffix = ", ";
+    }
+    return propertySections.map((propertySection) => {
+      return `"${propertySection.identifier}"`;
+    }).join(', ') + suffix;
+  }
+
+  _getReturnStatement() {
+    let body = this.sections.map((section) => {
+      return section.toJavaScript();
+    }).join(' + ');
+    return `return ${body};`;
+  }
+
+
 }
 
 class LiteralSection {
@@ -64,6 +105,9 @@ class LiteralSection {
     return 'LiteralSection';
   }
 
+  toJavaScript() {
+    return `"${this.value}"`;
+  }
 }
 
 class PropertySection {
@@ -73,6 +117,10 @@ class PropertySection {
 
   type() { //temp
     return 'PropertySection';
+  }
+
+  toJavaScript() {
+    return `this.get("${this.identifier}")`;
   }
 
 }
