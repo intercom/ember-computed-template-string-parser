@@ -1,0 +1,3 @@
+# ember-computed-template-string-parser
+
+Readme coming soon...
