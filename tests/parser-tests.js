@@ -35,7 +35,7 @@ describe("template-string-parser", function() {
 
   assertValidTemplate(
     'here is a double quote ${name} : "',
-    `Ember.computed("name", function() { return "here is a double quote " + this.get("name") + " : \""; })`
+    `Ember.computed("name", function() { return "here is a double quote " + this.get("name") + " : \\""; })`
   );
 
 });

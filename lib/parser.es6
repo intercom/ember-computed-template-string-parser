@@ -101,22 +101,15 @@ class LiteralSection {
     this.value = value;
   }
 
-  type() { //temp
-    return 'LiteralSection';
-  }
-
   toJavaScript() {
-    return `"${this.value}"`;
+    let escaped = this.value.replace('"', '\\"');
+    return `"${escaped}"`;
   }
 }
 
 class PropertySection {
   constructor(identifier) {
     this.identifier = identifier;
-  }
-
-  type() { //temp
-    return 'PropertySection';
   }
 
   toJavaScript() {
