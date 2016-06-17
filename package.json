@@ -1,6 +1,6 @@
 {
   "name": "ember-computed-template-string-parser",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "description": "",
   "main": "lib/parser.js",
   "scripts": {
