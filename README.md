@@ -5,7 +5,7 @@
 This simple package converts a string such as:
 
 ```
-"hello ${name}!"
+hello ${name}!
 ```
 
 into:
