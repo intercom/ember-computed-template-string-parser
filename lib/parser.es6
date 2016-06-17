@@ -102,7 +102,7 @@ class LiteralSection {
   }
 
   toJavaScript() {
-    let escaped = this.value.replace('"', '\\"');
+    let escaped = this.value.replace(/"/g, '\\"');
     return `"${escaped}"`;
   }
 }
