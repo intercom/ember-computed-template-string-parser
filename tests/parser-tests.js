@@ -23,19 +23,19 @@ describe("template-string-parser", function() {
     `Ember.computed("name", function() { return "hello " + this.get("name") + "!"; })`
   );
 
-  assertValidTemplate( //TODO: perhaps use brace expansion here?
+  assertValidTemplate(
     "hello ${person.name} you are ${person.age} years old",
     `Ember.computed("person.name", "person.age", function() { return "hello " + this.get("person.name") + " you are " + this.get("person.age") + " years old"; })`
   );
 
   assertValidTemplate(
-    "here is a single quote ${name} : '",
-    `Ember.computed("name", function() { return "here is a single quote " + this.get("name") + " : '"; })`
+    "here are some single quotes ${name} - 1:' 2:'",
+    `Ember.computed("name", function() { return "here are some single quotes " + this.get("name") + " - 1:' 2:'"; })`
   );
 
   assertValidTemplate(
-    'here is a double quote ${name} : "',
-    `Ember.computed("name", function() { return "here is a double quote " + this.get("name") + " : \\""; })`
+    'here are some double quotes ${name} - 1:" 2:"',
+    `Ember.computed("name", function() { return "here are some double quotes " + this.get("name") + " - 1:\\" 2:\\""; })`
   );
 
 });
