@@ -1,15 +1,16 @@
 class Parser {
 
-  constructor(template) {
+  constructor(template, emberNamespace="Ember") {
     this.template = template;
     this.sections = [];
     this._cursor = 0;
     this._startIndex = 0;
     this._isLiteralMode = true;
+    this.emberNamespace = emberNamespace;
     this._parse();
   }
   toComputedPropertyString() {
-    return `Ember.computed(${this._getKeyArguments()}function() { ${this._getReturnStatement()} })`;
+    return `${this.emberNamespace}.computed(${this._getKeyArguments()}function() { ${this._getReturnStatement()} })`;
   }
 
   _parse() {
