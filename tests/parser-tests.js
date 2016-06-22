@@ -38,12 +38,19 @@ describe("template-string-parser", function() {
     `Ember.computed("name", function() { return "here are some double quotes " + this.get("name") + " - 1:\\" 2:\\""; })`
   );
 
+  assertValidTemplate(
+    "hello ${name}",
+    `Em.computed("name", function() { return "hello " + this.get("name"); })`,
+    "Em"
+  );
+
+
 });
 
 
-function assertValidTemplate(template, expectedFunctionString) {
+function assertValidTemplate(template, expectedFunctionString, emberNamespace) {
   it(`correct parses ${template}`, function() {
-    var parser = new Parser(template);
+    var parser = new Parser(template, emberNamespace);
     assert.equal(parser.toComputedPropertyString(), expectedFunctionString);
   });
 }
